@@ -9,18 +9,18 @@
 
 #ifndef CONSUMER_CONTROLLER
 #define CONSUMER_CONTROLLER
-
-class ConsumerController : public Thread {
+// ConsumerController runs in a thread that controls the number of consumer threads dynamically.
+class ConsumerController : public Thread
+{
 public:
 	// constructor
 	ConsumerController(
-		TSQueue<Item*>* worker_queue,
-		TSQueue<Item*>* writer_queue,
-		Transformer* transformer,
+		TSQueue<Item *> *worker_queue,
+		TSQueue<Item *> *writer_queue,
+		Transformer *transformer,
 		int check_period,
 		int low_threshold,
-		int high_threshold
-	);
+		int high_threshold);
 
 	// destructor
 	~ConsumerController();
@@ -28,12 +28,12 @@ public:
 	virtual void start();
 
 private:
-	std::vector<Consumer*> consumers;
+	std::vector<Consumer *> consumers;
 
-	TSQueue<Item*>* worker_queue;
-	TSQueue<Item*>* writer_queue;
+	TSQueue<Item *> *worker_queue;
+	TSQueue<Item *> *writer_queue;
 
-	Transformer* transformer;
+	Transformer *transformer;
 
 	// Check to scale down or scale up every check period in microseconds.
 	int check_period;
@@ -44,33 +44,35 @@ private:
 	// the number of consumers scaled up by 1.
 	int high_threshold;
 
-	static void* process(void* arg);
+	static void *process(void *arg);
 };
 
 // Implementation start
 
 ConsumerController::ConsumerController(
-	TSQueue<Item*>* worker_queue,
-	TSQueue<Item*>* writer_queue,
-	Transformer* transformer,
+	TSQueue<Item *> *worker_queue,
+	TSQueue<Item *> *writer_queue,
+	Transformer *transformer,
 	int check_period,
 	int low_threshold,
-	int high_threshold
-) : worker_queue(worker_queue),
-	writer_queue(writer_queue),
-	transformer(transformer),
-	check_period(check_period),
-	low_threshold(low_threshold),
-	high_threshold(high_threshold) {
+	int high_threshold) : worker_queue(worker_queue),
+						  writer_queue(writer_queue),
+						  transformer(transformer),
+						  check_period(check_period),
+						  low_threshold(low_threshold),
+						  high_threshold(high_threshold)
+{
 }
 
 ConsumerController::~ConsumerController() {}
 
-void ConsumerController::start() {
+void ConsumerController::start()
+{
 	// TODO: starts a ConsumerController thread
 }
 
-void* ConsumerController::process(void* arg) {
+void *ConsumerController::process(void *arg)
+{
 	// TODO: implements the ConsumerController's work
 }
 

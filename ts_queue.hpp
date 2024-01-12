@@ -5,8 +5,10 @@
 
 #define DEFAULT_BUFFER_SIZE 200
 
+// A thread safe queue that allows multi-thread access.
 template <class T>
-class TSQueue {
+class TSQueue
+{
 public:
 	// constructor
 	TSQueue();
@@ -24,11 +26,12 @@ public:
 
 	// return the number of elements in the queue
 	int get_size();
+
 private:
 	// the maximum buffer size
 	int buffer_size;
 	// the buffer containing values of the queue
-	T* buffer;
+	T *buffer;
 	// the current size of the buffer
 	int size;
 	// the index of first item in the queue
@@ -45,31 +48,37 @@ private:
 // Implementation start
 
 template <class T>
-TSQueue<T>::TSQueue() : TSQueue(DEFAULT_BUFFER_SIZE) {
+TSQueue<T>::TSQueue() : TSQueue(DEFAULT_BUFFER_SIZE)
+{
 }
 
 template <class T>
-TSQueue<T>::TSQueue(int buffer_size) : buffer_size(buffer_size) {
+TSQueue<T>::TSQueue(int buffer_size) : buffer_size(buffer_size)
+{
 	// TODO: implements TSQueue constructor
 }
 
 template <class T>
-TSQueue<T>::~TSQueue() {
+TSQueue<T>::~TSQueue()
+{
 	// TODO: implenents TSQueue destructor
 }
 
 template <class T>
-void TSQueue<T>::enqueue(T item) {
+void TSQueue<T>::enqueue(T item)
+{
 	// TODO: enqueues an element to the end of the queue
 }
 
 template <class T>
-T TSQueue<T>::dequeue() {
+T TSQueue<T>::dequeue()
+{
 	// TODO: dequeues the first element of the queue
 }
 
 template <class T>
-int TSQueue<T>::get_size() {
+int TSQueue<T>::get_size()
+{
 	// TODO: returns the size of the queue
 }
 

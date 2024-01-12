@@ -14,7 +14,8 @@
 #define CONSUMER_CONTROLLER_HIGH_THRESHOLD_PERCENTAGE 80
 #define CONSUMER_CONTROLLER_CHECK_PERIOD 1000000
 
-int main(int argc, char** argv) {
+int main(int argc, char **argv)
+{
 	assert(argc == 4);
 
 	int n = atoi(argv[1]);

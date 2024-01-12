@@ -3,22 +3,23 @@
 #include "writer.hpp"
 #include "consumer.hpp"
 
-int main() {
-	TSQueue<Item*>* q1;
-	TSQueue<Item*>* q2;
+int main()
+{
+	TSQueue<Item *> *q1;
+	TSQueue<Item *> *q2;
 
-	q1 = new TSQueue<Item*>;
-	q2 = new TSQueue<Item*>;
+	q1 = new TSQueue<Item *>;
+	q2 = new TSQueue<Item *>;
 
-	Transformer* transformer = new Transformer;
+	Transformer *transformer = new Transformer;
 
-	Reader* reader = new Reader(80, "./tests/00.in", q1);
-	Writer* writer = new Writer(80, "./tests/00.out", q2);
+	Reader *reader = new Reader(80, "./tests/00.in", q1);
+	Writer *writer = new Writer(80, "./tests/00.out", q2);
 
-	Consumer* p1 = new Consumer(q1, q2, transformer);
-	Consumer* p2 = new Consumer(q1, q2, transformer);
-	Consumer* p3 = new Consumer(q1, q2, transformer);
-	Consumer* p4 = new Consumer(q1, q2, transformer);
+	Consumer *p1 = new Consumer(q1, q2, transformer);
+	Consumer *p2 = new Consumer(q1, q2, transformer);
+	Consumer *p3 = new Consumer(q1, q2, transformer);
+	Consumer *p4 = new Consumer(q1, q2, transformer);
 
 	reader->start();
 	writer->start();

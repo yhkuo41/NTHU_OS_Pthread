@@ -3,7 +3,8 @@
 #ifndef THREAD_HPP
 #define THREAD_HPP
 
-class Thread {
+class Thread
+{
 public:
 	// to start a new pthread work
 	virtual void start() = 0;
@@ -13,15 +14,18 @@ public:
 
 	// to cancel the pthread work
 	virtual int cancel();
+
 protected:
 	pthread_t t;
 };
 
-int Thread::join() {
+int Thread::join()
+{
 	return pthread_join(t, 0);
 }
 
-int Thread::cancel() {
+int Thread::cancel()
+{
 	return pthread_cancel(t);
 }
 

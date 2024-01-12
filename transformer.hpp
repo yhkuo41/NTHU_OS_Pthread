@@ -2,17 +2,20 @@
 #ifndef TRANSFORMER_HPP
 #define TRANSFORMER_HPP
 
-struct TransformSpec {
+struct TransformSpec
+{
   unsigned long long a;
   unsigned long long b;
   unsigned long long m;
   int iterations;
 };
 
-class Transformer {
+// Defines the producer and consumer transformation functions.
+class Transformer
+{
 public:
-  Transformer() {};
-  ~Transformer() {};
+  Transformer(){};
+  ~Transformer(){};
 
   // the producer's work
   unsigned long long producer_transform(char opcode, unsigned long long val);
@@ -21,7 +24,7 @@ public:
   unsigned long long consumer_transform(char opcode, unsigned long long val);
 
 private:
-  unsigned long long transform(TransformSpec* spec, unsigned long long val);
+  unsigned long long transform(TransformSpec *spec, unsigned long long val);
 };
 
 #endif // TRANSFORMER_HPP

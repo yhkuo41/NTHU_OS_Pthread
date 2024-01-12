@@ -2,10 +2,11 @@
 #include "ts_queue.hpp"
 #include "writer.hpp"
 
-int main() {
-	TSQueue<Item*>* q = new TSQueue<Item*>;
+int main()
+{
+	TSQueue<Item *> *q = new TSQueue<Item *>;
 
-	Writer* writer = new Writer(80, "./tests/00.out", q);
+	Writer *writer = new Writer(80, "./tests/00.out", q);
 
 	writer->start();
 
@@ -23,10 +24,11 @@ int main() {
 	for (int i = 0; i < 20; i++)
 		q->enqueue(new Item(i + 60, i + 60, 'C'));
 
-	writer->join();	
+	writer->join();
 
 	delete writer;
 	delete q;
 
-	return 0;;
+	return 0;
+	;
 }

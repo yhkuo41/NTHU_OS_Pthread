@@ -3,10 +3,11 @@
 #include "ts_queue.hpp"
 #include "reader.hpp"
 
-int main() {
-	TSQueue<Item*>* q = new TSQueue<Item*>;
+int main()
+{
+	TSQueue<Item *> *q = new TSQueue<Item *>;
 
-	Reader* reader = new Reader(80, "./tests/00.in", q);
+	Reader *reader = new Reader(80, "./tests/00.in", q);
 
 	reader->start();
 	reader->join();
@@ -28,5 +29,6 @@ int main() {
 	delete reader;
 	delete q;
 
-	return 0;;
+	return 0;
+	;
 }

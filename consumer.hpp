@@ -7,11 +7,13 @@
 
 #ifndef CONSUMER_HPP
 #define CONSUMER_HPP
-
-class Consumer : public Thread {
+// Every Consumer runs in a thread that takes Item from the Worker Queue, applies the Item
+// Transformer::consumer_transform function, then puts the result Item into Output Queue.
+class Consumer : public Thread
+{
 public:
 	// constructor
-	Consumer(TSQueue<Item*>* worker_queue, TSQueue<Item*>* output_queue, Transformer* transformer);
+	Consumer(TSQueue<Item *> *worker_queue, TSQueue<Item *> *output_queue, Transformer *transformer);
 
 	// destructor
 	~Consumer();
@@ -19,39 +21,45 @@ public:
 	virtual void start() override;
 
 	virtual int cancel() override;
-private:
-	TSQueue<Item*>* worker_queue;
-	TSQueue<Item*>* output_queue;
 
-	Transformer* transformer;
+private:
+	TSQueue<Item *> *worker_queue;
+	TSQueue<Item *> *output_queue;
+
+	Transformer *transformer;
 
 	bool is_cancel;
 
 	// the method for pthread to create a consumer thread
-	static void* process(void* arg);
+	static void *process(void *arg);
 };
 
-Consumer::Consumer(TSQueue<Item*>* worker_queue, TSQueue<Item*>* output_queue, Transformer* transformer)
-	: worker_queue(worker_queue), output_queue(output_queue), transformer(transformer) {
+Consumer::Consumer(TSQueue<Item *> *worker_queue, TSQueue<Item *> *output_queue, Transformer *transformer)
+	: worker_queue(worker_queue), output_queue(output_queue), transformer(transformer)
+{
 	is_cancel = false;
 }
 
 Consumer::~Consumer() {}
 
-void Consumer::start() {
+void Consumer::start()
+{
 	// TODO: starts a Consumer thread
 }
 
-int Consumer::cancel() {
+int Consumer::cancel()
+{
 	// TODO: cancels the consumer thread
 }
 
-void* Consumer::process(void* arg) {
-	Consumer* consumer = (Consumer*)arg;
+void *Consumer::process(void *arg)
+{
+	Consumer *consumer = (Consumer *)arg;
 
 	pthread_setcanceltype(PTHREAD_CANCEL_DEFERRED, nullptr);
 
-	while (!consumer->is_cancel) {
+	while (!consumer->is_cancel)
+	{
 		pthread_setcancelstate(PTHREAD_CANCEL_DISABLE, nullptr);
 
 		// TODO: implements the Consumer's work
