@@ -68,12 +68,36 @@ ConsumerController::~ConsumerController() {}
 
 void ConsumerController::start()
 {
-	// TODO: starts a ConsumerController thread
+	assert(!pthread_create(&t, nullptr, &ConsumerController::process, static_cast<void *>(this)));
 }
 
 void *ConsumerController::process(void *arg)
 {
-	// TODO: implements the ConsumerController's work
+	ConsumerController *cc = static_cast<ConsumerController *>(arg);
+	while (true)
+	{
+		// store transient state of worker queue
+		int wn = cc->worker_queue->get_size();
+		// The variable cn is just for readability. Since the number of consumers is not going to be changed by anyone
+		// except this one and only instance of ConsumerController.
+		int cn = cc->consumers.size();
+		if (wn > cc->high_threshold)
+		{
+			cc->consumers.push_back(new Consumer(cc->worker_queue, cc->writer_queue, cc->transformer));
+			cc->consumers.back()->start();
+			std::cout << "Scaling up consumers from " << cn << " to " << (cn + 1) << std::endl;
+		}
+		// make sure there is at least one Consumer until the program ends
+		else if (wn < cc->low_threshold && cn > 1)
+		{
+			cc->consumers.back()->cancel();
+			cc->consumers.back()->join(); // wait until finish
+			cc->consumers.pop_back();
+			std::cout << "Scaling down consumers from " << cn << " to " << (cn - 1) << std::endl;
+		}
+		usleep(cc->check_period); // the timing is not very accurate, but acceptable.
+	}
+	return nullptr;
 }
 
 #endif // CONSUMER_CONTROLLER_HPP

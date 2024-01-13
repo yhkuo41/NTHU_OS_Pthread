@@ -1,4 +1,5 @@
 #include <fstream>
+#include <cassert>
 #include "thread.hpp"
 #include "ts_queue.hpp"
 #include "item.hpp"
@@ -45,12 +46,19 @@ Writer::~Writer()
 
 void Writer::start()
 {
-	// TODO: starts a Writer thread
+	// pass this, so the thread can access the same Writer instance
+	assert(!pthread_create(&t, nullptr, &Writer::process, static_cast<void *>(this)));
 }
 
 void *Writer::process(void *arg)
 {
-	// TODO: implements the Writer's work
+	// this is a static method, we have to specify the Writer instance
+	Writer *writer = static_cast<Writer *>(arg);
+	while (writer->expected_lines--) // end after writing all lines
+	{
+		writer->ofs << *writer->output_queue->dequeue();
+	}
+	return nullptr;
 }
 
 #endif // WRITER_HPP

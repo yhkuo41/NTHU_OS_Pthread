@@ -1,0 +1,34 @@
+#!/bin/sh
+if [ "$#" -lt 1 ]; then
+  echo "Usage: $0 <debug_flag> [test_case_number] [test_case_lines]"
+  exit 1
+fi
+
+debug_flag=$1
+
+make clean
+if [ "$debug_flag" -eq 1 ]; then
+  scl enable devtoolset-8 'make debug'
+else
+  scl enable devtoolset-8 'make'
+fi
+
+
+
+if [ "$#" -eq 3 ]; then
+  test_case_number=$2
+  test_case_lines=$3
+  input_file="./tests/${test_case_number}.in"
+  output_file="./tests/${test_case_number}.out"
+  answer_file="./tests/${test_case_number}.ans"
+  spec_file="./tests/${test_case_number}_spec.json"
+  # ./scripts/auto_gen_transformer --input ./tests/00_spec.json --output transformer.cpp
+  # ./scripts/auto_gen_transformer --input ./tests/01_spec.json --output transformer.cpp
+  ./scripts/auto_gen_transformer --input "$spec_file" --output transformer.cpp
+  # ./main 200 ./tests/00.in ./tests/00.out
+  # ./main 4000 ./tests/01.in ./tests/01.out
+  ./main "$test_case_lines" "$input_file" "$output_file"
+  # ./scripts/verify --output ./tests/00.out --answer ./tests/00.ans
+  # ./scripts/verify --output ./tests/01.out --answer ./tests/01.ans
+  ./scripts/verify --output "$output_file" --answer "$answer_file"
+fi

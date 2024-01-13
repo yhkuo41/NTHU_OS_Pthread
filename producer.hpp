@@ -1,4 +1,5 @@
 #include <pthread.h>
+#include <cassert>
 #include "thread.hpp"
 #include "ts_queue.hpp"
 #include "item.hpp"
@@ -39,12 +40,19 @@ Producer::~Producer() {}
 
 void Producer::start()
 {
-	// TODO: starts a Producer thread
+	assert(!pthread_create(&t, nullptr, &Producer::process, static_cast<void *>(this)));
 }
 
 void *Producer::process(void *arg)
 {
-	// TODO: implements the Producer's work
+	Producer *producer = static_cast<Producer *>(arg);
+	while (true)
+	{
+		Item *item = producer->input_queue->dequeue();
+		item->val = producer->transformer->producer_transform(item->opcode, item->val);
+		producer->worker_queue->enqueue(item);
+	}
+	return nullptr;
 }
 
 #endif // PRODUCER_HPP

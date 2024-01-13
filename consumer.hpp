@@ -19,7 +19,7 @@ public:
 	~Consumer();
 
 	virtual void start() override;
-
+	// return the result of pthread_join
 	virtual int cancel() override;
 
 private:
@@ -44,12 +44,13 @@ Consumer::~Consumer() {}
 
 void Consumer::start()
 {
-	// TODO: starts a Consumer thread
+	assert(!pthread_create(&t, nullptr, &Consumer::process, static_cast<void *>(this)));
 }
 
 int Consumer::cancel()
 {
-	// TODO: cancels the consumer thread
+	is_cancel = true;
+	return pthread_cancel(t);
 }
 
 void *Consumer::process(void *arg)
@@ -62,7 +63,9 @@ void *Consumer::process(void *arg)
 	{
 		pthread_setcancelstate(PTHREAD_CANCEL_DISABLE, nullptr);
 
-		// TODO: implements the Consumer's work
+		Item *item = consumer->worker_queue->dequeue();
+		item->val = consumer->transformer->consumer_transform(item->opcode, item->val);
+		consumer->output_queue->enqueue(item);
 
 		pthread_setcancelstate(PTHREAD_CANCEL_ENABLE, nullptr);
 	}

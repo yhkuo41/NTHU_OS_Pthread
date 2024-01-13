@@ -15,5 +15,9 @@ docker-build:
 clean:
 	rm -f $(TARGETS)
 
+.PHONY: debug
+debug: CXXFLAGS = -static -std=c++11 -g
+debug: all
+
 %: %.cpp $(DEPS)
 	$(CXX) -o $@ $(CXXFLAGS) $(LDFLAGS) $^

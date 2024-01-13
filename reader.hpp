@@ -51,7 +51,7 @@ void *Reader::process(void *arg)
 {
 	Reader *reader = (Reader *)arg;
 
-	while (reader->expected_lines--)
+	while (reader->expected_lines--) // end after reading all lines
 	{
 		Item *item = new Item;
 		reader->ifs >> *item;
