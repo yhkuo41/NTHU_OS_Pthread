@@ -5,26 +5,32 @@ if [ "$#" -lt 1 ]; then
 fi
 
 debug_flag=$1
-
+# 0. clean
 make clean
+
+# 1. Generate transformer.cpp before rebuild
+if [ "$#" -eq 3 ]; then
+  test_case_number=$2
+  spec_file="./tests/${test_case_number}_spec.json"
+  # ./scripts/auto_gen_transformer --input ./tests/00_spec.json --output transformer.cpp
+  # ./scripts/auto_gen_transformer --input ./tests/01_spec.json --output transformer.cpp
+  ./scripts/auto_gen_transformer --input "$spec_file" --output transformer.cpp
+fi
+
+# 2. Build
 if [ "$debug_flag" -eq 1 ]; then
   scl enable devtoolset-8 'make debug'
 else
   scl enable devtoolset-8 'make'
 fi
 
-
-
+# 3. Run & test
 if [ "$#" -eq 3 ]; then
   test_case_number=$2
   test_case_lines=$3
   input_file="./tests/${test_case_number}.in"
   output_file="./tests/${test_case_number}.out"
   answer_file="./tests/${test_case_number}.ans"
-  spec_file="./tests/${test_case_number}_spec.json"
-  # ./scripts/auto_gen_transformer --input ./tests/00_spec.json --output transformer.cpp
-  # ./scripts/auto_gen_transformer --input ./tests/01_spec.json --output transformer.cpp
-  ./scripts/auto_gen_transformer --input "$spec_file" --output transformer.cpp
   # ./main 200 ./tests/00.in ./tests/00.out
   # ./main 4000 ./tests/01.in ./tests/01.out
   ./main "$test_case_lines" "$input_file" "$output_file"

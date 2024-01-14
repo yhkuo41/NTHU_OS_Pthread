@@ -56,7 +56,9 @@ void *Writer::process(void *arg)
 	Writer *writer = static_cast<Writer *>(arg);
 	while (writer->expected_lines--) // end after writing all lines
 	{
-		writer->ofs << *writer->output_queue->dequeue();
+		Item *item = writer->output_queue->dequeue();
+		writer->ofs << *item;
+		delete item;
 	}
 	return nullptr;
 }
