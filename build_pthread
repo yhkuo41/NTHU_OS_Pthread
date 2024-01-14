@@ -19,7 +19,7 @@ fi
 
 # 2. Build
 if [ "$debug_flag" -eq 1 ]; then
-  scl enable devtoolset-8 'make debug'
+  scl enable devtoolset-8 'make CXXFLAGS+=-g'
 else
   scl enable devtoolset-8 'make'
 fi

@@ -30,7 +30,7 @@ int main(int argc, char **argv)
 	TSQueue<Item *> writer_q = TSQueue<Item *>(WRITER_QUEUE_SIZE);
 	Transformer transformer = Transformer();
 
-	Reader *reader = new Reader(n, input_file_name, &reader_q); // TODO basic_ifstream and delete function?
+	Reader *reader = new Reader(n, input_file_name, &reader_q);
 	Writer *writer = new Writer(n, output_file_name, &writer_q);
 	ConsumerController cc = ConsumerController(&worker_q, &writer_q, &transformer, CONSUMER_CONTROLLER_CHECK_PERIOD, consumer_hi_num, consumer_lo_num);
 	std::vector<Producer> producers(PRODUCER_NUM, Producer(&reader_q, &worker_q, &transformer));
