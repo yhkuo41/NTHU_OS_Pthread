@@ -50,7 +50,7 @@ void Consumer::start()
 int Consumer::cancel()
 {
 	is_cancel = true;
-	return pthread_cancel(t);
+	return Thread::cancel();
 }
 
 void *Consumer::process(void *arg)
