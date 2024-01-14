@@ -1,0 +1,28 @@
+#!/bin/sh
+if [ "$#" -lt 3 ]; then
+  echo "Usage: $0 <spec_number> <test_case_lines> <verify_flag> [reader_q_size] [worker_q_size] [writer_q_size] [cc_lo_p] [cc_hi_p] [cc_period] [producer_num]"
+  exit 1
+fi
+
+spec_number=$1
+test_case_lines=$2
+verify_flag=$3
+input_file="./tests/${spec_number}.in"
+output_file="./tests/${spec_number}.out"
+answer_file="./tests/${spec_number}.ans"
+
+# 3. Run
+if [ "$#" -ge 10 ]; then
+  ./main "$test_case_lines" "$input_file" "$output_file" "$4" "$5" "$6" "$7" "$8" "$9" "${10}"
+else
+  # ./main 200 ./tests/00.in ./tests/00.out
+  # ./main 4000 ./tests/01.in ./tests/01.out
+  ./main "$test_case_lines" "$input_file" "$output_file"
+fi
+
+# 4. Test
+if [ "$verify_flag" -ne "0" ]; then
+  # ./scripts/verify --output ./tests/00.out --answer ./tests/00.ans
+  # ./scripts/verify --output ./tests/01.out --answer ./tests/01.ans
+  ./scripts/verify --output "$output_file" --answer "$answer_file"
+fi

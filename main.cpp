@@ -17,23 +17,49 @@
 
 int main(int argc, char **argv)
 {
-	assert(argc == 4);
+	assert(argc >= 4);
 
 	int n = atoi(argv[1]);
 	std::string input_file_name(argv[2]);
 	std::string output_file_name(argv[3]);
-	int consumer_lo_num = WORKER_QUEUE_SIZE * CONSUMER_CONTROLLER_LOW_THRESHOLD_PERCENTAGE / 100;
-	int consumer_hi_num = WORKER_QUEUE_SIZE * CONSUMER_CONTROLLER_HIGH_THRESHOLD_PERCENTAGE / 100;
 
-	TSQueue<Item *> reader_q = TSQueue<Item *>(READER_QUEUE_SIZE);
-	TSQueue<Item *> worker_q = TSQueue<Item *>(WORKER_QUEUE_SIZE);
-	TSQueue<Item *> writer_q = TSQueue<Item *>(WRITER_QUEUE_SIZE);
+	int rq_sz = READER_QUEUE_SIZE;
+	int wq_sz = WORKER_QUEUE_SIZE;
+	int wrq_sz = WRITER_QUEUE_SIZE;
+	int cc_lo_p = CONSUMER_CONTROLLER_LOW_THRESHOLD_PERCENTAGE;
+	int cc_hi_p = CONSUMER_CONTROLLER_HIGH_THRESHOLD_PERCENTAGE;
+	int cc_period = CONSUMER_CONTROLLER_CHECK_PERIOD;
+	int prod_num = PRODUCER_NUM;
+	if (argc >= 11)
+	{
+		rq_sz = atoi(argv[4]);
+		wq_sz = atoi(argv[5]);
+		wrq_sz = atoi(argv[6]);
+		cc_lo_p = atoi(argv[7]);
+		cc_hi_p = atoi(argv[8]);
+		cc_period = atoi(argv[9]);
+		prod_num = atoi(argv[10]);
+	}
+	assert(rq_sz >= 1);
+	assert(wq_sz >= 1);
+	assert(wrq_sz >= 1);
+	assert(cc_lo_p >= 0 && cc_lo_p <= 100);
+	assert(cc_hi_p >= 0 && cc_hi_p <= 100);
+	assert(cc_period >= 1);
+	assert(prod_num >= 1);
+
+	int consumer_lo_num = wq_sz * cc_lo_p / 100;
+	int consumer_hi_num = wq_sz * cc_hi_p / 100;
+
+	TSQueue<Item *> reader_q = TSQueue<Item *>(rq_sz);
+	TSQueue<Item *> worker_q = TSQueue<Item *>(wq_sz);
+	TSQueue<Item *> writer_q = TSQueue<Item *>(wrq_sz);
 	Transformer transformer = Transformer();
 
 	Reader *reader = new Reader(n, input_file_name, &reader_q);
 	Writer *writer = new Writer(n, output_file_name, &writer_q);
-	ConsumerController cc = ConsumerController(&worker_q, &writer_q, &transformer, CONSUMER_CONTROLLER_CHECK_PERIOD, consumer_hi_num, consumer_lo_num);
-	std::vector<Producer> producers(PRODUCER_NUM, Producer(&reader_q, &worker_q, &transformer));
+	ConsumerController cc = ConsumerController(&worker_q, &writer_q, &transformer, cc_period, consumer_hi_num, consumer_lo_num);
+	std::vector<Producer> producers(prod_num, Producer(&reader_q, &worker_q, &transformer));
 	reader->start();
 	writer->start();
 	cc.start();
@@ -47,6 +73,5 @@ int main(int argc, char **argv)
 	writer->join();
 	delete writer;
 	delete reader;
-	// TODO experiment & log
 	return 0;
 }
