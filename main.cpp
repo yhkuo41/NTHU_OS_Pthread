@@ -58,7 +58,7 @@ int main(int argc, char **argv)
 
 	Reader *reader = new Reader(n, input_file_name, &reader_q);
 	Writer *writer = new Writer(n, output_file_name, &writer_q);
-	ConsumerController cc = ConsumerController(&worker_q, &writer_q, &transformer, cc_period, consumer_hi_num, consumer_lo_num);
+	ConsumerController cc = ConsumerController(&worker_q, &writer_q, &transformer, cc_period, consumer_lo_num, consumer_hi_num);
 	std::vector<Producer> producers(prod_num, Producer(&reader_q, &worker_q, &transformer));
 	reader->start();
 	writer->start();
